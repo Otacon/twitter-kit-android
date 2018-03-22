@@ -244,7 +244,7 @@ public class TweetTimelineListAdapterTest extends TweetUiTestCase {
             final TimelineCursor timelineCursor = new TimelineCursor(tweets);
             final TimelineResult<Tweet> timelineResult
                     = new TimelineResult<>(timelineCursor, tweets);
-            cb.success(new Result<>(timelineResult, null));
+            cb.success(new Result<>(timelineResult));
         }
 
         @Override
@@ -253,7 +253,7 @@ public class TweetTimelineListAdapterTest extends TweetUiTestCase {
             final TimelineCursor timelineCursor = new TimelineCursor(tweets);
             final TimelineResult<Tweet> timelineResult
                     = new TimelineResult<>(timelineCursor, tweets);
-            cb.success(new Result<>(timelineResult, null));
+            cb.success(new Result<>(timelineResult));
         }
     }
 
