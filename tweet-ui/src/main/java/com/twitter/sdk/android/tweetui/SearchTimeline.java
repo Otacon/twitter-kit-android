@@ -19,6 +19,7 @@ package com.twitter.sdk.android.tweetui;
 
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.RetrofitCallback;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.models.Search;
@@ -69,7 +70,7 @@ public class SearchTimeline extends BaseTimeline implements Timeline<Tweet> {
      */
     @Override
     public void next(Long sinceId, Callback<TimelineResult<Tweet>> cb) {
-        createSearchRequest(sinceId, null).enqueue(new SearchCallback(cb));
+        createSearchRequest(sinceId, null).enqueue(new RetrofitCallback<>(new SearchCallback(cb)));
     }
 
     /**
@@ -82,7 +83,7 @@ public class SearchTimeline extends BaseTimeline implements Timeline<Tweet> {
         // api quirk: search api provides results that are inclusive of the maxId iff
         // FILTER_RETWEETS is added to the query (which we currently always add), decrement the
         // maxId to get exclusive results
-        createSearchRequest(null, decrementMaxId(maxId)).enqueue(new SearchCallback(cb));
+        createSearchRequest(null, decrementMaxId(maxId)).enqueue(new RetrofitCallback<>(new SearchCallback(cb)));
     }
 
     @Override
@@ -116,7 +117,7 @@ public class SearchTimeline extends BaseTimeline implements Timeline<Tweet> {
             final TimelineResult<Tweet> timelineResult
                     = new TimelineResult<>(new TimelineCursor(tweets), tweets);
             if (cb != null) {
-                cb.success(new Result<>(timelineResult, result.response));
+                cb.success(new Result<>(timelineResult));
             }
         }
 

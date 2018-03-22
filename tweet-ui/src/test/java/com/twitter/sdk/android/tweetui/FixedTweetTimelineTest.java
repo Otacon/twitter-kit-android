@@ -69,7 +69,6 @@ public class FixedTweetTimelineTest {
                         result.data.timelineCursor.minPosition);
                 assertEquals((Long) TestFixtures.TEST_TWEET.getId(),
                         result.data.timelineCursor.maxPosition);
-                assertNull(result.response);
             }
             @Override
             public void failure(TwitterException exception) {
@@ -87,7 +86,6 @@ public class FixedTweetTimelineTest {
                 assertTrue(result.data.items.isEmpty());
                 assertNull(result.data.timelineCursor.maxPosition);
                 assertNull(result.data.timelineCursor.minPosition);
-                assertNull(result.response);
             }
 
             @Override

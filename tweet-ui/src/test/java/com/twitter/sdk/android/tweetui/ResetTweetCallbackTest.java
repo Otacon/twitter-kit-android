@@ -48,7 +48,7 @@ public class ResetTweetCallbackTest {
         final Callback<Tweet> developerCallback = mock(Callback.class);
         final ResetTweetCallback resetCallback = new ResetTweetCallback(mockTweetView,
                 mockTweetRepository, developerCallback);
-        final Result<Tweet> successResult = new Result<>(TestFixtures.TEST_TWEET, null);
+        final Result<Tweet> successResult = new Result<>(TestFixtures.TEST_TWEET);
         resetCallback.success(successResult);
         verify(mockTweetRepository).updateCache(TestFixtures.TEST_TWEET);
         verify(mockTweetView).setTweet(TestFixtures.TEST_TWEET);
@@ -60,7 +60,7 @@ public class ResetTweetCallbackTest {
         final Callback<Tweet> developerCallback = mock(Callback.class);
         final ResetTweetCallback resetCallback = new ResetTweetCallback(mockTweetView,
                 mockTweetRepository, null);
-        final Result<Tweet> successResult = new Result<>(TestFixtures.TEST_TWEET, null);
+        final Result<Tweet> successResult = new Result<>(TestFixtures.TEST_TWEET);
         try {
             resetCallback.success(successResult);
         } catch (NullPointerException e) {

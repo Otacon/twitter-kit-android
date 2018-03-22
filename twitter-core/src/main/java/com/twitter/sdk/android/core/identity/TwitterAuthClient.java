@@ -22,8 +22,10 @@ import android.content.Intent;
 
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.RetrofitCallback;
 import com.twitter.sdk.android.core.SessionManager;
 import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterApiException;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterAuthException;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -35,6 +37,7 @@ import com.twitter.sdk.android.core.internal.scribe.TwitterCoreScribeClientHolde
 import com.twitter.sdk.android.core.models.User;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Client for requesting authorization and email from the user.
@@ -188,17 +191,17 @@ public class TwitterAuthClient {
         final Call<User> verifyRequest = twitterCore.getApiClient(session).getAccountService()
                 .verifyCredentials(false, false, true);
 
-        verifyRequest.enqueue(new Callback<User>() {
+        verifyRequest.enqueue(new RetrofitCallback<>(new Callback<User>() {
             @Override
             public void success(Result<User> result) {
-                callback.success(new Result<>(result.data.email, null));
+                callback.success(new Result<>(result.data.email));
             }
 
             @Override
             public void failure(TwitterException exception) {
                 callback.failure(exception);
             }
-        });
+        }));
     }
 
     protected DefaultScribeClient getScribeClient() {

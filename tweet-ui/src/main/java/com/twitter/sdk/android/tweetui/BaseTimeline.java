@@ -60,7 +60,7 @@ abstract class BaseTimeline {
             final TimelineResult<Tweet> timelineResult
                     = new TimelineResult<>(new TimelineCursor(tweets), tweets);
             if (cb != null) {
-                cb.success(new Result<>(timelineResult, result.response));
+                cb.success(new Result<>(timelineResult));
             }
         }
 

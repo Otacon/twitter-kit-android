@@ -18,6 +18,7 @@
 package com.twitter.sdk.android.tweetui;
 
 import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.RetrofitCallback;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.models.Tweet;
 
@@ -58,7 +59,7 @@ public class TwitterListTimeline extends BaseTimeline implements Timeline<Tweet>
      */
     @Override
     public void next(Long sinceId, Callback<TimelineResult<Tweet>> cb) {
-        createListTimelineRequest(sinceId, null).enqueue(new TweetsCallback(cb));
+        createListTimelineRequest(sinceId, null).enqueue(new RetrofitCallback<>(new TweetsCallback(cb)));
     }
 
     /**
@@ -70,7 +71,7 @@ public class TwitterListTimeline extends BaseTimeline implements Timeline<Tweet>
     public void previous(Long maxId, Callback<TimelineResult<Tweet>> cb) {
         // lists/statuses api provides results which are inclusive of the maxId, decrement the
         // maxId to get exclusive results
-        createListTimelineRequest(null, decrementMaxId(maxId)).enqueue(new TweetsCallback(cb));
+        createListTimelineRequest(null, decrementMaxId(maxId)).enqueue(new RetrofitCallback<>(new TweetsCallback(cb)));
     }
 
     Call<List<Tweet>> createListTimelineRequest(final Long sinceId, final Long maxId) {

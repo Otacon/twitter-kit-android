@@ -24,11 +24,16 @@ import android.text.TextUtils;
 import com.twitter.Validator;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.RetrofitCallback;
 import com.twitter.sdk.android.core.TwitterApiClient;
+import com.twitter.sdk.android.core.TwitterApiException;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.models.User;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 import static com.twitter.sdk.android.tweetcomposer.TweetUploadService.TWEET_COMPOSE_CANCEL;
 
@@ -77,7 +82,7 @@ class ComposerController {
 
     void setProfilePhoto() {
         dependencyProvider.getApiClient(session).getAccountService()
-                .verifyCredentials(false, true, false).enqueue(new Callback<User>() {
+                .verifyCredentials(false, true, false).enqueue(new RetrofitCallback<>(new Callback<User>() {
                     @Override
                     public void success(Result<User> result) {
                         composerView.setProfilePhotoView(result.data);
@@ -88,7 +93,7 @@ class ComposerController {
                         // show placeholder background color
                         composerView.setProfilePhotoView(null);
                     }
-                });
+                }));
     }
 
     void setImageView(Uri imageUri) {

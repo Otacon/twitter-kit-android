@@ -284,7 +284,7 @@ public class TwitterAuthClientTest {
                 = new TwitterAuthClient.CallbackWrapper(mockSessionManager, mockCallback);
 
         final TwitterSession mockSession = mock(TwitterSession.class);
-        final Result<TwitterSession> mockResult = new Result<>(mockSession, null);
+        final Result<TwitterSession> mockResult = new Result<>(mockSession);
         callbackWrapper.success(mockResult);
 
         verify(mockSessionManager).setActiveSession(eq(mockSession));

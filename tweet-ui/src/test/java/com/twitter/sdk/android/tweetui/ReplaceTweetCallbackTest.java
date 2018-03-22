@@ -45,7 +45,7 @@ public class ReplaceTweetCallbackTest {
         final Callback<Tweet> cb = mock(Callback.class);
         final TweetTimelineListAdapter.ReplaceTweetCallback replaceCallback
                 = new TweetTimelineListAdapter.ReplaceTweetCallback(mockTimelineDelegate, cb);
-        final Result<Tweet> successResult = new Result<>(TestFixtures.TEST_TWEET, null);
+        final Result<Tweet> successResult = new Result<>(TestFixtures.TEST_TWEET);
         replaceCallback.success(successResult);
         verify(mockTimelineDelegate).setItemById(TestFixtures.TEST_TWEET);
         verify(cb).success(successResult);
@@ -56,7 +56,7 @@ public class ReplaceTweetCallbackTest {
         final Callback<Tweet> cb = mock(Callback.class);
         final TweetTimelineListAdapter.ReplaceTweetCallback replaceCallback
                 = new TweetTimelineListAdapter.ReplaceTweetCallback(mockTimelineDelegate, null);
-        final Result<Tweet> successResult = new Result<>(TestFixtures.TEST_TWEET, null);
+        final Result<Tweet> successResult = new Result<>(TestFixtures.TEST_TWEET);
         try {
             replaceCallback.success(successResult);
         } catch (NullPointerException e) {

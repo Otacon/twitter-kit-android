@@ -19,7 +19,9 @@ package com.twitter.sdk.android.core.internal.oauth;
 
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.RetrofitCallback;
 import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterApiException;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
@@ -28,6 +30,7 @@ import com.twitter.sdk.android.core.internal.network.UrlUtils;
 
 import okio.ByteString;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
@@ -75,7 +78,7 @@ public class OAuth2Service extends OAuthService {
                         final GuestAuthToken guestAuthToken = new GuestAuthToken(
                                 appAuthToken.getTokenType(), appAuthToken.getAccessToken(),
                                 result.data.guestToken);
-                        callback.success(new Result<>(guestAuthToken, null));
+                        callback.success(new Result<>(guestAuthToken));
                     }
 
                     @Override
@@ -107,7 +110,7 @@ public class OAuth2Service extends OAuthService {
      */
     void requestAppAuthToken(final Callback<OAuth2Token> callback) {
         api.getAppAuthToken(getAuthHeader(), OAuthConstants.GRANT_TYPE_CLIENT_CREDENTIALS)
-                .enqueue(callback);
+                .enqueue(new RetrofitCallback<>(callback));
     }
 
     /**
@@ -118,7 +121,7 @@ public class OAuth2Service extends OAuthService {
      */
     void requestGuestToken(final Callback<GuestTokenResponse> callback,
             OAuth2Token appAuthToken) {
-        api.getGuestToken(getAuthorizationHeader(appAuthToken)).enqueue(callback);
+        api.getGuestToken(getAuthorizationHeader(appAuthToken)).enqueue(new RetrofitCallback<>(callback));
     }
 
     /**

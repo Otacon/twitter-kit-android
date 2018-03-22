@@ -112,12 +112,12 @@ class LikeTweetAction extends BaseTweetAction implements View.OnClickListener {
                     case TwitterApiConstants.Errors.ALREADY_FAVORITED:
                         final Tweet favorited = new TweetBuilder().copy(tweet).setFavorited(true)
                                 .build();
-                        cb.success(new Result<>(favorited, null));
+                        cb.success(new Result<>(favorited));
                         return;
                     case TwitterApiConstants.Errors.ALREADY_UNFAVORITED:
                         final Tweet unfavorited = new TweetBuilder().copy(tweet).setFavorited(false)
                                 .build();
-                        cb.success(new Result<>(unfavorited, null));
+                        cb.success(new Result<>(unfavorited));
                         return;
                     default:
                         // reset the toggle state back to match the Tweet

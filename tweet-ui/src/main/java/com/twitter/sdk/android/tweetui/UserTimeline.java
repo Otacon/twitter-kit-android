@@ -18,6 +18,7 @@
 package com.twitter.sdk.android.tweetui;
 
 import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.RetrofitCallback;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.models.Tweet;
 
@@ -57,7 +58,7 @@ public class UserTimeline extends BaseTimeline implements Timeline<Tweet> {
      */
     @Override
     public void next(Long sinceId, Callback<TimelineResult<Tweet>> cb) {
-        createUserTimelineRequest(sinceId, null).enqueue(new TweetsCallback(cb));
+        createUserTimelineRequest(sinceId, null).enqueue(new RetrofitCallback<>(new TweetsCallback(cb)));
     }
 
     /**
@@ -69,7 +70,7 @@ public class UserTimeline extends BaseTimeline implements Timeline<Tweet> {
     public void previous(Long maxId, Callback<TimelineResult<Tweet>> cb) {
         // user timeline api provides results which are inclusive, decrement the maxId to get
         // exclusive results
-        createUserTimelineRequest(null, decrementMaxId(maxId)).enqueue(new TweetsCallback(cb));
+        createUserTimelineRequest(null, decrementMaxId(maxId)).enqueue(new RetrofitCallback<>(new TweetsCallback(cb)));
     }
 
     @Override

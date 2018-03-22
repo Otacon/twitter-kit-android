@@ -21,6 +21,8 @@ import android.net.Uri;
 
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.RetrofitCallback;
+import com.twitter.sdk.android.core.TwitterApiException;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterAuthException;
 import com.twitter.sdk.android.core.TwitterAuthToken;
@@ -36,6 +38,7 @@ import java.util.TreeMap;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -77,7 +80,7 @@ public class OAuth1aService extends OAuthService {
         final String url = getTempTokenUrl();
 
         api.getTempToken(new OAuth1aHeaders().getAuthorizationHeader(config, null,
-                buildCallbackUrl(config), "POST", url, null)).enqueue(getCallbackWrapper(callback));
+                buildCallbackUrl(config), "POST", url, null)).enqueue(new RetrofitCallback<>(getCallbackWrapper(callback)));
     }
 
     String getTempTokenUrl() {
@@ -110,7 +113,7 @@ public class OAuth1aService extends OAuthService {
         final String authHeader = new OAuth1aHeaders().getAuthorizationHeader(getTwitterCore()
                         .getAuthConfig(), requestToken, null, "POST", url, null);
 
-        api.getAccessToken(authHeader, verifier).enqueue(getCallbackWrapper(callback));
+        api.getAccessToken(authHeader, verifier).enqueue(new RetrofitCallback<>(getCallbackWrapper(callback)));
     }
 
     String getAccessTokenUrl() {
@@ -179,7 +182,7 @@ public class OAuth1aService extends OAuthService {
                         callback.failure(new TwitterAuthException(
                                 "Failed to parse auth response: " + responseAsStr));
                     } else {
-                        callback.success(new Result<>(authResponse, null));
+                        callback.success(new Result<>(authResponse));
                     }
                 } catch (IOException e) {
                     callback.failure(new TwitterAuthException(e.getMessage(), e));

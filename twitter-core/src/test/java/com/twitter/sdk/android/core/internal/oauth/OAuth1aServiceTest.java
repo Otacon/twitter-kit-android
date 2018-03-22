@@ -19,6 +19,7 @@ package com.twitter.sdk.android.core.internal.oauth;
 
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.RetrofitCallback;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -227,9 +228,8 @@ public class OAuth1aServiceTest {
                                           Callback<OAuthResponse> authResponseCallback) throws IOException {
         final Callback<ResponseBody> callbackWrapper = service.getCallbackWrapper(authResponseCallback);
         final ResponseBody responseBody = ResponseBody.create(MediaType.parse("application/json"), responseStr);
-        final Response<ResponseBody> response = Response.success(responseBody);
 
-        callbackWrapper.success(new Result<>(responseBody, response));
+        callbackWrapper.success(new Result<>(responseBody));
     }
 
     @Test
@@ -265,7 +265,7 @@ public class OAuth1aServiceTest {
         };
         final Callback<ResponseBody> callbackWrapper = service.getCallbackWrapper(callback);
         final ResponseBody responseBody = ResponseBody.create(MediaType.parse("application/json"), "");
-        callbackWrapper.success(new Result<>(responseBody, Response.success(responseBody)));
+        callbackWrapper.success(new Result<>(responseBody));
     }
 
     @Test

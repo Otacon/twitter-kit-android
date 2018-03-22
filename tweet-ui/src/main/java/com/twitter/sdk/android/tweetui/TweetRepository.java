@@ -23,6 +23,7 @@ import android.text.TextUtils;
 
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.RetrofitCallback;
 import com.twitter.sdk.android.core.SessionManager;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthException;
@@ -95,7 +96,7 @@ class TweetRepository {
      */
     private void deliverTweet(final Tweet tweet, final Callback<Tweet> cb) {
         if (cb == null) return;
-        mainHandler.post(() -> cb.success(new Result<>(tweet, null)));
+        mainHandler.post(() -> cb.success(new Result<>(tweet)));
     }
 
     void favorite(final long tweetId, final Callback<Tweet> cb) {
@@ -103,7 +104,7 @@ class TweetRepository {
             @Override
             public void success(Result<TwitterSession> result) {
                 twitterCore.getApiClient(result.data).getFavoriteService().create(tweetId, false)
-                        .enqueue(cb);
+                        .enqueue(new RetrofitCallback<>(cb));
             }
         });
     }
@@ -113,7 +114,7 @@ class TweetRepository {
             @Override
             public void success(Result<TwitterSession> result) {
                 twitterCore.getApiClient(result.data).getFavoriteService().destroy(tweetId, false)
-                        .enqueue(cb);
+                        .enqueue(new RetrofitCallback<>(cb));
             }
         });
     }
@@ -123,7 +124,7 @@ class TweetRepository {
             @Override
             public void success(Result<TwitterSession> result) {
                 twitterCore.getApiClient(result.data).getStatusesService().retweet(tweetId, false)
-                        .enqueue(cb);
+                        .enqueue(new RetrofitCallback<>(cb));
             }
         });
     }
@@ -133,7 +134,7 @@ class TweetRepository {
             @Override
             public void success(Result<TwitterSession> result) {
                 twitterCore.getApiClient(result.data).getStatusesService().unretweet(tweetId, false)
-                        .enqueue(cb);
+                        .enqueue(new RetrofitCallback<>(cb));
             }
         });
     }
@@ -143,7 +144,7 @@ class TweetRepository {
         if (session == null) {
             cb.failure(new TwitterAuthException("User authorization required"));
         } else {
-            cb.success(new Result<>(session, null));
+            cb.success(new Result<>(session));
         }
     }
 
@@ -163,7 +164,7 @@ class TweetRepository {
         }
 
         twitterCore.getApiClient().getStatusesService()
-                .show(tweetId, null, null, null).enqueue(new SingleTweetCallback(cb));
+                .show(tweetId, null, null, null).enqueue(new RetrofitCallback<>(new SingleTweetCallback(cb)));
     }
 
     /**
@@ -176,7 +177,7 @@ class TweetRepository {
     void loadTweets(final List<Long> tweetIds, final Callback<List<Tweet>> cb) {
         final String commaSepIds = TextUtils.join(",", tweetIds);
         twitterCore.getApiClient().getStatusesService().lookup(commaSepIds, null, null, null)
-                .enqueue(new MultiTweetsCallback(tweetIds, cb));
+                .enqueue(new RetrofitCallback<>(new MultiTweetsCallback(tweetIds, cb)));
     }
 
     /**
@@ -195,7 +196,7 @@ class TweetRepository {
             final Tweet tweet = result.data;
             updateCache(tweet);
             if (cb != null) {
-                cb.success(new Result<>(tweet, result.response));
+                cb.success(new Result<>(tweet));
             }
         }
 
@@ -222,7 +223,7 @@ class TweetRepository {
         public void success(Result<List<Tweet>> result) {
             if (cb != null) {
                 final List<Tweet> sorted = Utils.orderTweets(tweetIds, result.data);
-                cb.success(new Result<>(sorted, result.response));
+                cb.success(new Result<>(sorted));
             }
         }
 

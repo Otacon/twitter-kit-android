@@ -115,7 +115,7 @@ public class LikeTweetActionTest {
         final LikeTweetAction.LikeCallback callback
                 = new LikeTweetAction.LikeCallback(mockToggleButton, unfavoritedTweet,
                 mockCallback);
-        final Result<Tweet> successResult = new Result<>(TestFixtures.TEST_FAVORITED_TWEET, null);
+        final Result<Tweet> successResult = new Result<>(TestFixtures.TEST_FAVORITED_TWEET);
         callback.success(successResult);
         verify(mockCallback).success(successResult);
     }

@@ -86,7 +86,7 @@ public class TimelineDelegateTest {
         // extra result items ordered from larger id to smaller
         testExtraItems.add(TEST_ITEM_4);
         testExtraItems.add(TEST_ITEM_3);
-        testResult = new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, testItems), null);
+        testResult = new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, testItems));
     }
 
     @Test
@@ -482,7 +482,7 @@ public class TimelineDelegateTest {
                 new TimelineCursor(ANY_POSITION, ANY_POSITION));
         final TimelineDelegate.NextCallback cb = delegate.new NextCallback(null,
                 timelineStateHolder);
-        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, testExtraItems), null));
+        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, testExtraItems)));
         // assert the next TimelineCursor is set on the ScrollStateHolder, previous unchanged
         assertEquals(TEST_MAX_POSITION, timelineStateHolder.positionForNext());
         assertEquals(ANY_POSITION, timelineStateHolder.positionForPrevious());
@@ -503,7 +503,7 @@ public class TimelineDelegateTest {
         final TimelineStateHolder timelineStateHolder = new TimelineStateHolder();
         final TimelineDelegate.NextCallback cb = delegate.new NextCallback(null,
                 timelineStateHolder);
-        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, testExtraItems), null));
+        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, testExtraItems)));
         // assert the next TimelineCursor is set on the ScrollStateHolder, previous unchanged
         assertEquals(TEST_MAX_POSITION, timelineStateHolder.positionForNext());
         assertEquals(TEST_MIN_POSITION, timelineStateHolder.positionForPrevious());
@@ -516,8 +516,7 @@ public class TimelineDelegateTest {
         final TimelineStateHolder timelineStateHolder = new TimelineStateHolder();
         final TimelineDelegate.NextCallback cb = delegate.new NextCallback(null,
                 timelineStateHolder);
-        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, Collections.emptyList()),
-                null));
+        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, Collections.emptyList())));
         // assert that the cursors and itemList are left unmodified
         assertNull(timelineStateHolder.positionForNext());
         assertNull(timelineStateHolder.positionForPrevious());
@@ -534,7 +533,7 @@ public class TimelineDelegateTest {
                 new TimelineCursor(ANY_POSITION, ANY_POSITION));
         final TimelineDelegate.RefreshCallback cb = delegate.new RefreshCallback(null,
                 timelineStateHolder);
-        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, testExtraItems), null));
+        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, testExtraItems)));
         // assert the next TimelineCursor is set on the ScrollStateHolder, previous unchanged
         assertEquals(TEST_MAX_POSITION, timelineStateHolder.positionForNext());
         assertEquals(ANY_POSITION, timelineStateHolder.positionForPrevious());
@@ -553,8 +552,7 @@ public class TimelineDelegateTest {
         final TimelineStateHolder timelineStateHolder = new TimelineStateHolder();
         final TimelineDelegate.RefreshCallback cb = delegate.new RefreshCallback(null,
                 timelineStateHolder);
-        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, Collections.emptyList()),
-                null));
+        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, Collections.emptyList())));
         // assert that the cursors and itemList are left unmodified
         assertNull(timelineStateHolder.positionForNext());
         assertNull(timelineStateHolder.positionForPrevious());
@@ -571,7 +569,7 @@ public class TimelineDelegateTest {
                 new TimelineCursor(ANY_POSITION, ANY_POSITION));
         final TimelineDelegate.PreviousCallback cb
                 = delegate.new PreviousCallback(timelineStateHolder);
-        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, testExtraItems), null));
+        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, testExtraItems)));
         // assert the previous TimelineCursor is set on the ScrollStateHolder
         assertEquals(TEST_MIN_POSITION, timelineStateHolder.positionForPrevious());
         assertEquals(ANY_POSITION, timelineStateHolder.positionForNext());
@@ -592,7 +590,7 @@ public class TimelineDelegateTest {
         final TimelineStateHolder timelineStateHolder = new TimelineStateHolder();
         final TimelineDelegate.PreviousCallback cb
                 = delegate.new PreviousCallback(timelineStateHolder);
-        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, testExtraItems), null));
+        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, testExtraItems)));
         // assert the previous TimelineCursor is set on the ScrollStateHolder
         assertEquals(TEST_MAX_POSITION, timelineStateHolder.positionForNext());
         assertEquals(TEST_MIN_POSITION, timelineStateHolder.positionForPrevious());
@@ -606,8 +604,7 @@ public class TimelineDelegateTest {
         final TimelineStateHolder timelineStateHolder = new TimelineStateHolder();
         final TimelineDelegate.PreviousCallback cb
                 = delegate.new PreviousCallback(timelineStateHolder);
-        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, Collections.emptyList()),
-                null));
+        cb.success(new Result<>(new TimelineResult<>(TEST_TIMELINE_CURSOR, Collections.emptyList())));
         // assert that the cursors and itemList are left unmodified
         assertNull(timelineStateHolder.positionForNext());
         assertNull(timelineStateHolder.positionForPrevious());
@@ -672,7 +669,7 @@ public class TimelineDelegateTest {
             TestItem.populateList(testItems, numItems);
             final TimelineResult<TestItem> timelineResult
                     = new TimelineResult<>(new TimelineCursor(minPosition, maxPosition), testItems);
-            cb.success(new Result<>(timelineResult, null));
+            cb.success(new Result<>(timelineResult));
         }
 
         @Override
@@ -681,7 +678,7 @@ public class TimelineDelegateTest {
             TestItem.populateList(testItems, numItems);
             final TimelineResult<TestItem> timelineResult
                     = new TimelineResult<>(new TimelineCursor(minPosition, maxPosition), testItems);
-            cb.success(new Result<>(timelineResult, null));
+            cb.success(new Result<>(timelineResult));
         }
     }
 }

@@ -90,7 +90,7 @@ public abstract class AuthHandler {
                 final String screenName = data.getStringExtra(EXTRA_SCREEN_NAME);
                 final long userId = data.getLongExtra(EXTRA_USER_ID, 0L);
                 callback.success(new Result<>(new TwitterSession(
-                        new TwitterAuthToken(token, tokenSecret), userId, screenName), null));
+                        new TwitterAuthToken(token, tokenSecret), userId, screenName)));
             } else if (data != null && data.hasExtra(EXTRA_AUTH_ERROR)) {
                 callback.failure(
                         (TwitterAuthException) data.getSerializableExtra(EXTRA_AUTH_ERROR));

@@ -93,7 +93,7 @@ public class OAuthControllerTest  {
         final Callback<OAuthResponse> callback = controller.newRequestTempTokenCallback();
         final TwitterAuthToken mockRequestToken = mock(TwitterAuthToken.class);
         final OAuthResponse oAuthResponse = new OAuthResponse(mockRequestToken, null, 0L);
-        callback.success(new Result<>(oAuthResponse, null));
+        callback.success(new Result<>(oAuthResponse));
 
         assertEquals(mockRequestToken, controller.requestToken);
         verify(mockOAuth1aService).getAuthorizeUrl(eq(mockRequestToken));
@@ -152,7 +152,7 @@ public class OAuthControllerTest  {
         final OAuthResponse oAuthResponse = new OAuthResponse(
                 new TwitterAuthToken(TestFixtures.TOKEN, TestFixtures.SECRET),
                 TestFixtures.SCREEN_NAME, TestFixtures.USER_ID);
-        callback.success(new Result<>(oAuthResponse, null));
+        callback.success(new Result<>(oAuthResponse));
 
         final ArgumentCaptor<Intent> intentArgCaptor = ArgumentCaptor.forClass(Intent.class);
         verify(mockListener).onComplete(eq(Activity.RESULT_OK), intentArgCaptor.capture());

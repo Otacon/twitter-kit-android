@@ -19,6 +19,7 @@ package com.twitter.sdk.android.tweetui;
 
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.RetrofitCallback;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.models.Tweet;
@@ -63,7 +64,7 @@ public class CollectionTimeline extends BaseTimeline implements Timeline<Tweet> 
      */
     @Override
     public void next(Long minPosition, Callback<TimelineResult<Tweet>> cb) {
-        createCollectionRequest(minPosition, null).enqueue(new CollectionCallback(cb));
+        createCollectionRequest(minPosition, null).enqueue(new RetrofitCallback<>(new CollectionCallback(cb)));
     }
 
     /**
@@ -73,7 +74,7 @@ public class CollectionTimeline extends BaseTimeline implements Timeline<Tweet> 
      */
     @Override
     public void previous(Long maxPosition, Callback<TimelineResult<Tweet>> cb) {
-        createCollectionRequest(null, maxPosition).enqueue(new CollectionCallback(cb));
+        createCollectionRequest(null, maxPosition).enqueue(new RetrofitCallback<>(new CollectionCallback(cb)));
     }
 
     @Override
@@ -113,7 +114,7 @@ public class CollectionTimeline extends BaseTimeline implements Timeline<Tweet> 
                 timelineResult = new TimelineResult<>(null, Collections.<Tweet>emptyList());
             }
             if (cb != null) {
-                cb.success(new Result(timelineResult, result.response));
+                cb.success(new Result(timelineResult));
             }
         }
 

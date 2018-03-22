@@ -105,7 +105,7 @@ class FilterTimelineDelegate extends TimelineDelegate<Tweet> {
                 final TimelineResult<Tweet> filteredTimelineResult =
                         buildTimelineResult(result.data.timelineCursor, filteredTweets);
 
-                handler.post(() -> callback.success(new Result<>(filteredTimelineResult, result.response)));
+                handler.post(() -> callback.success(new Result<>(filteredTimelineResult)));
 
                 scribeFilteredTimeline(result.data.items, filteredTweets);
             };

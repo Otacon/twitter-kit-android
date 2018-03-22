@@ -17,6 +17,9 @@
 
 package com.twitter.sdk.android.core;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 /**
  * Communicates responses from a server or offline requests. One and only one method will be
  * invoked in response to a given request.
@@ -29,18 +32,25 @@ package com.twitter.sdk.android.core;
  *
  * @param <T> expected response type
  */
-public abstract class Callback<T> {
+public class RetrofitCallback<T> implements retrofit2.Callback<T> {
 
-    /**
-     * Called when call completes successfully.
-     *
-     * @param result the parsed result.
-     */
-    public abstract void success(Result<T> result);
+    private final Callback<T> twitterCallback;
 
-    /**
-     * Unsuccessful call due to network failure, non-2XX status code, or unexpected
-     * exception.
-     */
-    public abstract void failure(TwitterException exception);
+    public RetrofitCallback(Callback<T> callback){
+        twitterCallback = callback;
+    }
+
+    @Override
+    public final void onResponse(Call<T> call, Response<T> response){
+        if (response.isSuccessful()) {
+            twitterCallback.success(new Result<>(response.body()));
+        } else {
+            twitterCallback.failure(new TwitterApiException(response));
+        }
+    }
+
+    @Override
+    public final void onFailure(Call<T> call, Throwable t) {
+        twitterCallback.failure(new TwitterException("Request Failure", t));
+    }
 }
