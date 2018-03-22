@@ -23,9 +23,9 @@ import android.net.Uri;
 
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.RetrofitCallback;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterApiClient;
-import com.twitter.sdk.android.core.TwitterApiException;
 import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
@@ -37,8 +37,6 @@ import java.io.File;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class TweetUploadService extends IntentService {
     public static final String UPLOAD_SUCCESS
@@ -105,31 +103,19 @@ public class TweetUploadService extends IntentService {
         final TwitterApiClient client = dependencyProvider.getTwitterApiClient(session);
 
         client.getStatusesService().update(text, null, null, null, null, null, null, true, mediaId)
-                .enqueue(new retrofit2.Callback<Tweet>() {
-                    @Override
-                    public final void onResponse(Call<Tweet> call, Response<Tweet> response){
-                        if (response.isSuccessful()) {
-                            success(new Result<>(response.body()));
-                        } else {
-                            failure(new TwitterApiException(response));
-                        }
-                    }
-                    @Override
-                    public final void onFailure(Call<Tweet> call, Throwable t) {
-                        failure(new TwitterException("Request Failure", t));
-                    }
+                .enqueue(new RetrofitCallback<>(
+                        new Callback<Tweet>() {
+                            @Override
+                            public void success(Result<Tweet> result) {
+                                sendSuccessBroadcast(result.data.getId());
+                                stopSelf();
+                            }
 
-
-                    private void success(Result<Tweet> result) {
-                        sendSuccessBroadcast(result.data.getId());
-                        stopSelf();
-                    }
-
-
-                    private void failure(TwitterException exception) {
-                        fail(exception);
-                    }
-                });
+                            @Override
+                            public void failure(TwitterException exception) {
+                                fail(exception);
+                            }
+                        }));
     }
 
     void uploadMedia(TwitterSession session, Uri imageUri, Callback<Media> callback) {
@@ -144,20 +130,7 @@ public class TweetUploadService extends IntentService {
         final String mimeType = FileUtils.getMimeType(file);
         final RequestBody media = RequestBody.create(MediaType.parse(mimeType), file);
 
-        client.getMediaService().upload(media, null, null).enqueue(new retrofit2.Callback<Media>() {
-            @Override
-            public final void onResponse(Call<Media> call, Response<Media> response){
-                if (response.isSuccessful()) {
-                    callback.success(new Result<>(response.body()));
-                } else {
-                    callback.failure(new TwitterApiException(response));
-                }
-            }
-            @Override
-            public final void onFailure(Call<Media> call, Throwable t) {
-                callback.failure(new TwitterException("Request Failure", t));
-            }
-        });
+        client.getMediaService().upload(media, null, null).enqueue(new RetrofitCallback<>(callback));
     }
 
     void fail(TwitterException e) {
